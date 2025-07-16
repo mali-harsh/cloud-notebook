@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Computing </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .presentation-container {
+            width: 90%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            padding: 40px;
+            min-height: 600px;
+            position: relative;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #34495e;
+            font-size: 2em;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #2980b9;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+
+        .content {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #34495e;
+        }
+
+        .example-box {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #3498db;
+        }
+
+        .example-box h4 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .benefit-card {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .cloud-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .cloud-type {
+            background: white;
+            border: 2px solid #3498db;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .cloud-type:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        .service-models {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .service-model {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            width: 300px;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .service-model h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: #3498db;
+            color: white;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .scaling-visual {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .scaling-box {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 45%;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            padding-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #34495e;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .security-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .security-point {
+            background: #ffe6e6;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .cost-model {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">15</span>
+        </div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>☁️ Cloud Computing </h1>
+            <div class="content" style="text-align: center; margin-top: 50px;">
+                <div class="icon">🌐</div>
+                <h2>Welcome to the Cloud!</h2>
+                <p style="font-size: 1.3em; margin-top: 30px;">
+                    Let's explore the world of Cloud Computing with simple examples and real-world analogies
+                </p>
+            </div>
+            <div class="controls">
+                <button id="prevBtn1" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn1" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 2: What is Cloud Computing? -->
+        <div class="slide">
+            <h2>🤔 What is Cloud Computing?</h2>
+            <div class="content">
+                <p><strong>Simple Definition:</strong> Cloud computing is like renting a computer, software, or storage space over the internet instead of buying and maintaining your own.</p>
+                
+                <div class="example-box">
+                    <h4>🏠 Real-World Analogy: Hotel vs. Owning a House</h4>
+                    <p><strong>Traditional IT (Owning a House):</strong> You buy servers, maintain them, pay for electricity, hire IT staff</p>
+                    <p><strong>Cloud Computing (Hotel):</strong> You rent what you need, when you need it. Someone else handles maintenance!</p>
+                </div>
+
+                <h3>Key Characteristics:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>🌐 Access from anywhere with internet</li>
+                    <li>💸 Pay only for what you use</li>
+                    <li>📈 Scale up or down instantly</li>
+                    <li>🔧 Someone else manages the infrastructure</li>
+                </ul>
+            </div>
+            <div class="controls">
+                <button id="prevBtn2" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn2" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 3: Why Cloud Computing? -->
+        <div class="slide">
+            <h2>🚀 Why Cloud Computing?</h2>
+            <div class="content">
+                <div class="example-box">
+                    <h4>📱 Think About Netflix</h4>
+                    <p>Instead of buying DVDs for every movie, you stream them when needed. Similarly, instead of buying servers, you use cloud services when needed!</p>
+                </div>
+
+                <h3>Problems with Traditional IT:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>💰 High upfront costs (servers, software, data center)</li>
+                    <li>🔧 Need technical expertise to maintain</li>
+                    <li>📊 Hard to predict exact capacity needs</li>
+                    <li>⏰ Time-consuming to set up</li>
+                    <li>🏢 Limited to office location</li>
+                </ul>
+
+                <h3>Cloud Computing Solutions:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>✅ No upfront investment</li>
+                    <li>✅ Instant setup and access</li>
+                    <li>✅ Expert management included</li>
+                    <li>✅ Access from anywhere</li>
+                    <li>✅ Pay-as-you-go pricing</li>
+                </ul>
+            </div>
+            <div class="controls">
+                <button id="prevBtn3" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn3" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 4: Benefits of Cloud Computing -->
+        <div class="slide">
+            <h2>🌟 Benefits of Cloud Computing</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="icon">💰</div>
+                    <h3>Cost Savings</h3>
+                    <p>No need to buy expensive hardware. Pay only for what you use, like your electricity bill!</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">⚡</div>
+                    <h3>Speed & Agility</h3>
+                    <p>Get servers in minutes, not months. Like ordering food online vs. cooking from scratch!</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">📈</div>
+                    <h3>Scalability</h3>
+                    <p>Easily handle traffic spikes. Like adding more lanes to a highway during rush hour!</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">🔒</div>
+                    <h3>Security</h3>
+                    <p>Professional security teams protect your data. Like having a security company guard your house!</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">🌍</div>
+                    <h3>Global Access</h3>
+                    <p>Access your applications from anywhere in the world with internet connectivity!</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">🔄</div>
+                    <h3>Reliability</h3>
+                    <p>Built-in backup and disaster recovery. Like having spare tires for your car!</p>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="prevBtn4" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn4" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 5: Types of Cloud Computing -->
+        <div class="slide">
+            <h2>🏗️ Types of Cloud Computing</h2>
+            <div class="content">
+                <p>Think of these as different types of housing arrangements:</p>
+                
+                <div class="cloud-types">
+                    <div class="cloud-type">
+                        <h3>🏨 Public Cloud</h3>
+                        <p><strong>Like a Hotel</strong></p>
+                        <p>Shared resources, managed by cloud provider, accessible to anyone</p>
+                    </div>
+                    <div class="cloud-type">
+                        <h3>🏠 Private Cloud</h3>
+                        <p><strong>Like Your Own House</strong></p>
+                        <p>Dedicated resources, exclusive to your organization</p>
+                    </div>
+                    <div class="cloud-type">
+                        <h3>🏢 Hybrid Cloud</h3>
+                        <p><strong>Like Having Both</strong></p>
+                        <p>Combination of public and private clouds</p>
+                    </div>
+                    <div class="cloud-type">
+                        <h3>🏘️ Community Cloud</h3>
+                        <p><strong>Like a Gated Community</strong></p>
+                        <p>Shared by specific group with common interests</p>
+                    </div>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="prevBtn5" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn5" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 6: Public Cloud -->
+        <div class="slide">
+            <h2>🏨 Public Cloud</h2>
+            <div class="content">
+                <div class="example-box">
+                    <h4>🏨 Hotel Analogy</h4>
+                    <p>You rent a room in a hotel. The hotel manages everything - cleaning, maintenance, security. You share common areas (lobby, pool) with other guests, but your room is private.</p>
+                </div>
+
+                <h3>Characteristics:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>🌐 Owned and operated by cloud service provider</li>
+                    <li>🤝 Resources shared among multiple customers</li>
+                    <li>💸 Most cost-effective option</li>
+                    <li>📍 Accessible from anywhere</li>
+                </ul>
+
+                <h3>Examples:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>☁️ Amazon Web Services (AWS)</li>
+                    <li>🔵 Microsoft Azure</li>
+                    <li>🌈 Google Cloud Platform</li>
+                    <li>📧 Gmail, Dropbox, Office 365</li>
+                </ul>
+
+                <h3>Best For:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>✅ Startups and small businesses</li>
+                    <li>✅ Development and testing</li>
+                    <li>✅ Web applications</li>
+                    <li>✅ Non-sensitive data</li>
+                </ul>
+            </div>
+            <div class="controls">
+                <button id="prevBtn6" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn6" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 7: Private Cloud -->
+        <div class="slide">
+            <h2>🏠 Private Cloud</h2>
+            <div class="content">
+                <div class="example-box">
+                    <h4>🏠 Private House Analogy</h4>
+                    <p>You own your house. You have complete control over everything - who enters, how it's decorated, what security measures to implement. More expensive but totally yours.</p>
+                </div>
+
+                <h3>Characteristics:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>🔒 Dedicated infrastructure for single organization</li>
+                    <li>🛡️ Enhanced security and privacy</li>
+                    <li>⚙️ Complete control over resources</li>
+                    <li>💰 More expensive than public cloud</li>
+                </ul>
+
+                <h3>Examples:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>🏦 Bank's internal cloud system</li>
+                    <li>🏥 Hospital's patient data system</li>
+                    <li>🏛️ Government agencies</li>
+                    <li>🏢 Large enterprise data centers</li>
+                </ul>
+
+                <h3>Best For:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>✅ Large enterprises</li>
+                    <li>✅ Highly sensitive data</li>
+                    <li>✅ Strict compliance requirements</li>
+                    <li>✅ Custom security needs</li>
+                </ul>
+            </div>
+            <div class="controls">
+                <button id="prevBtn7" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn7" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 8: Hybrid Cloud -->
+        <div class="slide">
+            <h2>🏢 Hybrid Cloud</h2>
+            <div class="content">
+                <div class="example-box">
+                    <h4>🏠🏨 House + Hotel Analogy</h4>
+                    <p>You own a house (private cloud) but also book hotel rooms when guests visit (public cloud). You get the best of both worlds - security at home and flexibility when needed.</p>
+                </div>
+
+                <h3>Characteristics:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>🔄 Combination of public and private clouds</li>
+                    <li>📊 Data and applications can move between them</li>
+                    <li>⚖️ Balance of security and flexibility</li>
+                    <li>🔧 More complex to manage</li>
+                </ul>
+
+                <h3>Real-World Example:</h3>
+                <div class="example-box">
+                    <h4>🏦 Bank Example</h4>
+                    <p><strong>Private Cloud:</strong> Customer financial data (highly sensitive)<br>
+                    <strong>Public Cloud:</strong> Marketing website and mobile app (less sensitive)</p>
+                </div>
+
+                <h3>Best For:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>✅ Organizations with mixed workloads</li>
+                    <li>✅ Gradual cloud migration</li>
+                    <li>✅ Balancing cost and security</li>
+                    <li>✅ Handling traffic spikes</li>
+                </ul>
+            </div>
+            <div class="controls">
+                <button id="prevBtn8" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn8" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 9: Community Cloud -->
+        <div class="slide">
+            <h2>🏘️ Community Cloud</h2>
+            <div class="content">
+                <div class="example-box">
+                    <h4>🏘️ Gated Community Analogy</h4>
+                    <p>Several families (organizations) share a private community with common facilities like a clubhouse, pool, and security. They have similar needs and share costs while maintaining privacy.</p>
+                </div>
+
+                <h3>Characteristics:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>🤝 Shared by organizations with common interests</li>
+                    <li>💸 Costs shared among community members</li>
+                    <li>🔒 More secure than public cloud</li>
+                    <li>📋 Common compliance requirements</li>
+                </ul>
+
+                <h3>Examples:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>🏥 Healthcare organizations sharing patient systems</li>
+                    <li>🏛️ Government agencies collaboration</li>
+                    <li>🎓 Universities sharing research platforms</li>
+                    <li>🏦 Financial institutions with similar regulations</li>
+                </ul>
+
+                <h3>Best For:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>✅ Organizations with similar security needs</li>
+                    <li>✅ Shared compliance requirements</li>
+                    <li>✅ Cost-sharing arrangements</li>
+                    <li>✅ Industry-specific applications</li>
+                </ul>
+            </div>
+            <div class="controls">
+                <button id="prevBtn9" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn9" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 10: Comparison Table -->
+        <div class="slide">
+            <h2>⚖️ Cloud Types Comparison</h2>
+            <div class="content">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Public Cloud 🏨</th>
+                            <th>Private Cloud 🏠</th>
+                            <th>Hybrid Cloud 🏢</th>
+                            <th>Community Cloud 🏘️</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Cost</strong></td>
+                            <td>💰 Lowest</td>
+                            <td>💰💰💰 Highest</td>
+                            <td>💰💰 Medium</td>
+                            <td>💰💰 Shared</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Security</strong></td>
+                            <td>🔒 Standard</td>
+                            <td>🔒🔒🔒 Highest</td>
+                            <td>🔒🔒 Mixed</td>
+                            <td>🔒🔒 High</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Control</strong></td>
+                            <td>⚙️ Limited</td>
+                            <td>⚙️⚙️⚙️ Full</td>
+                            <td>⚙️⚙️ Partial</td>
+                            <td>⚙️⚙️ Shared</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scalability</strong></td>
+                            <td>📈📈📈 Excellent</td>
+                            <td>📈 Limited</td>
+                            <td>📈📈 Good</td>
+                            <td>📈📈 Good</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Setup Time</strong></td>
+                            <td>⚡ Minutes</td>
+                            <td>⏰ Months</td>
+                            <td>⏰ Weeks</td>
+                            <td>⏰ Weeks</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="controls">
+                <button id="prevBtn10" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn10" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 11: Service Models Introduction -->
+        <div class="slide">
+            <h2>🍕 Cloud Service Models</h2>
+            <div class="content">
+                <div class="example-box">
+                    <h4>🍕 Pizza Analogy</h4>
+                    <p>Think of cloud services like different ways to get pizza:</p>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>IaaS:</strong> Buy ingredients and make pizza at home</li>
+                        <li><strong>PaaS:</strong> Get pizza base, add your own toppings</li>
+                        <li><strong>SaaS:</strong> Order ready-made pizza for delivery</li>
+                    </ul>
+                </div>
+
+                <div class="service-models">
+                    <div class="service-model">
+                        <h4>🏗️ IaaS</h4>
+                        <p><strong>Infrastructure as a Service</strong></p>
+                        <p>Raw computing resources (servers, storage, networks)</p>
+                    </div>
+                    <div class="service-model">
+                        <h4>🛠️ PaaS</h4>
+                        <p><strong>Platform as a Service</strong></p>
+                        <p>Development platform with tools and frameworks</p>
+                    </div>
+                    <div class="service-model">
+                        <h4>📱 SaaS</h4>
+                        <p><strong>Software as a Service</strong></p>
+                        <p>Ready-to-use applications</p>
+                    </div>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="prevBtn11" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn11" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 12: IaaS, PaaS, SaaS Details -->
+        <div class="slide">
+            <h2>🔧 Service Models in Detail</h2>
+            <div class="content">
+                <h3>🏗️ Infrastructure as a Service (IaaS)</h3>
+                <div class="example-box">
+                    <h4>Examples: Amazon EC2, Google Compute Engine</h4>
+                    <p><strong>What you get:</strong> Virtual machines, storage, networks<br>
+                    <strong>What you manage:</strong> Operating system, applications, data<br>
+                    <strong>Like:</strong> Renting a bare apartment - you bring furniture and utilities</p>
+                </div>
+
+                <h3>🛠️ Platform as a Service (PaaS)</h3>
+                <div class="example-box">
+                    <h4>Examples: Google App Engine, Microsoft Azure App Service</h4>
+                    <p><strong>What you get:</strong> Development platform, databases, web servers<br>
+                    <strong>What you manage:</strong> Your applications and data<br>
+                    <strong>Like:</strong> Renting a furnished apartment - just bring your belongings</p>
+                </div>
+
+                <h3>📱 Software as a Service (SaaS)</h3>
+                <div class="example-box">
+                    <h4>Examples: Gmail, Salesforce, Zoom, Netflix</h4>
+                    <p><strong>What you get:</strong> Complete applications<br>
+                    <strong>What you manage:</strong> Just your data and user settings<br>
+                    <strong>Like:</strong> Staying in a hotel - everything is provided and managed</p>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="prevBtn12" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn12" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 13: Scaling -->
+        <div class="slide">
+            <h2>📈 Horizontal vs Vertical Scaling</h2>
+            <div class="content">
+                <div class="scaling-visual">
+                    <div class="scaling-box">
+                        <h3>⬆️ Vertical Scaling</h3>
+                        <p><strong>"Scale Up"</strong></p>
+                        <p>Add more power to existing machine</p>
+                        <div class="example-box">
+                            <h4>🚗 Car Analogy</h4>
+                            <p>Making your car engine more powerful</p>
+                        </div>
+                        <p><strong>Example:</strong> Upgrading from 4GB to 16GB RAM</p>
+                    </div>
+                    <div class="scaling-box">
+                        <h3>➡️ Horizontal Scaling</h3>
+                        <p><strong>"Scale Out"</strong></p>
+                        <p>Add more machines</p>
+                        <div class="example-box">
+                            <h4>🚗 Car Analogy</h4>
+                            <p>Getting more cars instead of one powerful car</p>
+                        </div>
+                        <p><strong>Example:</strong> Adding 3 more servers to handle traffic</p>
+                    </div>
+                </div>
+
+                <h3>When to Use Each:</h3>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Vertical:</strong> Quick fix, database servers, limited by hardware</li>
+                    <li><strong>Horizontal:</strong> Web applications, better fault tolerance, unlimited scaling</li>
+                </ul>
+            </div>
+            <div class="controls">
+                <button id="prevBtn13" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn13" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 14: Security -->
+        <div class="slide">
+            <h2>🔒 Cloud Security</h2>
+            <div class="content">
+                <div class="example-box">
+                    <h4>🏦 Bank Security Analogy</h4>
+                    <p>Cloud security is like a bank's security system - multiple layers of protection working together to keep your valuables safe.</p>
+                </div>
+
+                <h3>🛡️ Security Measures:</h3>
+                <div class="security-points">
+                    <div class="security-point">
+                        <h4>🔐 Data Encryption</h4>
+                        <p>Data is scrambled so only authorized users can read it</p>
+                    </div>
+                    <div class="security-point">
+                        <h4>👤 Identity Management</h4>
+                        <p>Controlling who can access what resources</p>
+                    </div>
+                    <div class="security-point">
+                        <h4>🔥 Firewalls</h4>
+                        <p>Digital barriers that block unauthorized access</p>
+                    </div>
+                    <div class="security-point">
+                        <h4>📊 Monitoring</h4>
+                        <p>24/7 surveillance of all activities</p>
+                    </div>
+                    <div class="security-point">
+                        <h4>💾 Backups</h4>
+                        <p>Multiple copies of data in different locations</p>
+                    </div>
+                    <div class="security-point">
+                        <h4>🔄 Updates</h4>
+                        <p>Regular security patches and improvements</p>
+                    </div>
+                </div>
+
+                <h3>📋 Shared Responsibility Model:</h3>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Cloud Provider:</strong> Physical security, infrastructure, platform security</li>
+                    <li><strong>Customer:</strong> Data protection, user access, application security</li>
+                </ul>
+            </div>
+            <div class="controls">
+                <button id="prevBtn14" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn14" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 15: Costing Model -->
+        <div class="slide">
+            <h2>💰 Cloud Costing Model</h2>
+            <div class="content">
+                <div class="example-box">
+                    <h4>💡 Electricity Bill Analogy</h4>
+                    <p>Cloud billing is like your electricity bill - you pay for what you actually use. No upfront costs, just usage-based pricing.</p>
+                </div>
+
+                <h3>💸 Pay-as-You-Go Benefits:</h3>
+                <div class="cost-model">
+                    <h4>🚀 No Upfront Costs</h4>
+                    <p>Start using immediately without buying hardware</p>
+                </div>
+                <div class="cost-model">
+                    <h4>📊 Usage-Based Pricing</h4>
+                    <p>Pay only for compute time, storage space, and data transfer you actually use</p>
+                </div>
+                <div class="cost-model">
+                    <h4>📈 Scale Economics</h4>
+                    <p>Cloud providers get bulk discounts and pass savings to customers</p>
+                </div>
+                <div class="cost-model">
+                    <h4>💡 Flexible Pricing</h4>
+                    <p>Different pricing models: on-demand, reserved, spot pricing</p>
+                </div>
+
+                <h3>💳 Common Pricing Models:</h3>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Compute:</strong> Pay per hour/minute of server usage</li>
+                    <li><strong>Storage:</strong> Pay per GB stored per month</li>
+                    <li><strong>Data Transfer:</strong> Pay for data moving in/out</li>
+                    <li><strong>Requests:</strong> Pay per API call or function execution</li>
+                </ul>
+
+                <div class="example-box">
+                    <h4>🏪 Real Example: Small E-commerce Site</h4>
+                    <p><strong>Traditional:</strong> $10,000 upfront + $500/month maintenance<br>
+                    <strong>Cloud:</strong> $0 upfront + $50-200/month based on actual traffic</p>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="prevBtn15" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn15" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Slide 16: Summary -->
+        <div class="slide">
+            <h2>🎯 Key Takeaways</h2>
+            <div class="content">
+                <h3>🧠 Remember These Points:</h3>
+                <ul style="margin-left: 20px; font-size: 1.2em; line-height: 2;">
+                    <li>☁️ <strong>Cloud = Renting instead of buying</strong> IT resources</li>
+                    <li>🏨 <strong>Public Cloud = Hotel</strong> (shared, cost-effective)</li>
+                    <li>🏠 <strong>Private Cloud = Your house</strong> (exclusive, secure)</li>
+                    <li>🏢 <strong>Hybrid = Best of both worlds</strong></li>
+                    <li>🍕 <strong>IaaS = Ingredients, PaaS = Pizza base, SaaS = Ready pizza</strong></li>
+                    <li>📈 <strong>Scaling:</strong> Up = More power, Out = More machines</li>
+                    <li>🔒 <strong>Security is shared</strong> between you and provider</li>
+                    <li>💰 <strong>Pay only for what you use</strong> - like electricity</li>
+                </ul>
+
+                <div class="example-box" style="margin-top: 30px;">
+                    <h4>🎓 You're Now Ready!</h4>
+                    <p>You now understand cloud computing basics using simple analogies. Welcome to the cloud journey! 🚀</p>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="prevBtn16" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn16" onclick="changeSlide(1)">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            
+            // Update all button states
+            for (let i = 1; i <= totalSlides; i++) {
+                const prevBtn = document.getElementById(`prevBtn${i}`);
+                const nextBtn = document.getElementById(`nextBtn${i}`);
+                if (prevBtn) prevBtn.disabled = currentSlide === 0;
+                if (nextBtn) nextBtn.disabled = currentSlide === totalSlides - 1;
+            }
+        }
+
+        function changeSlide(direction) {
+            if (direction === 1 && currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            } else if (direction === -1 && currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

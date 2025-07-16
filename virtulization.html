@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtualization Basics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        .presentation-container {
+            width: 90%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            padding: 50px;
+            min-height: 650px;
+            position: relative;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #0f172a;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            color: #1e40af;
+            font-size: 1.375rem;
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 600;
+        }
+
+        p, li {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: #475569;
+            margin-bottom: 1rem;
+        }
+
+        .example-box {
+            background: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 1.75rem;
+            border-radius: 12px;
+            margin: 1.75rem 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .example-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.1);
+            border-color: #93c5fd;
+        }
+
+        .analogy-box {
+            background: #f8fafc;
+            border-left: 4px solid #10b981;
+            padding: 1.75rem;
+            border-radius: 12px;
+            margin: 1.75rem 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .analogy-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.1);
+            border-color: #a7f3d0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.75rem 0;
+        }
+
+        .benefit-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 1.75rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+            border-color: #bfdbfe;
+            background: #f8fafc;
+        }
+
+        .types-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.75rem 0;
+        }
+
+        .type-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 1.75rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .type-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+            border-color: #a7f3d0;
+            background: #f8fafc;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: white;
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+            padding: 0.75rem 1.75rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            background: white;
+            color: #94a3b8;
+            border-color: #cbd5e1;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: white;
+            color: #475569;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            font-weight: 500;
+        }
+
+        .vm-diagram {
+            display: flex;
+            justify-content: space-around;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .vm-layer {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 0.75rem;
+            text-align: center;
+            min-width: 200px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .vm-layer:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+            border-color: #a7f3d0;
+            background: #f8fafc;
+        }
+
+        .hypervisor-types {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .hypervisor-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 1.75rem;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .hypervisor-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+            border-color: #bfdbfe;
+            background: #f8fafc;
+        }
+
+        .highlight {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+        }
+
+        .intro-animation {
+            text-align: center;
+            padding: 3rem 1.5rem;
+        }
+
+        .intro-animation h1 {
+            font-size: 3rem;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .intro-animation h1 span.emoji {
+            -webkit-text-fill-color: initial; /* Reset the text fill */
+            background: none; /* Remove background gradient */
+            display: inline-block; /* Ensure proper alignment */
+            margin-right: 8px; /* Add some spacing */
+        }
+
+        .intro-animation p {
+            font-size: 1.375rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Premium details */
+        .slide::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+            pointer-events: none;
+        }
+
+        /* Inspired by adaline.ai */
+        .slide-header {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .slide-header h2 {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .slide-header h2::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 1.5rem;
+                min-height: 500px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .hypervisor-types {
+                grid-template-columns: 1fr;
+            }
+            
+            .benefits-grid, .types-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">12</span>
+        </div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="intro-animation">
+                <h1><span class="emoji">🖥️</span> Virtualization Basics</h1>
+                <p>A Complete Guide for Beginners</p>
+                <div class="example-box">
+                    <h3>🎯 What You'll Learn Today:</h3>
+                    <p>• Understanding virtualization with real-world examples</p>
+                    <p>• Cloud computing connection</p>
+                    <p>• Hypervisors and their types</p>
+                    <p>• Virtual machines and their benefits</p>
+                    <p>• Different types of virtualization</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: What is Virtualization? -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🤔 What is Virtualization?</h2>
+            </div>
+            <p><strong>Simple Definition:</strong> Virtualization is creating virtual (fake/simulated) versions of physical things like computers, servers, networks, or storage devices.</p>
+            
+            <div class="analogy-box">
+                <h3>🏠 Real-World Analogy: Apartment Building</h3>
+                <p><strong>Think of it like this:</strong> You have a big building (physical server) that you divide into multiple apartments (virtual machines). Each apartment has its own kitchen, bathroom, and living space, but they all share the same building structure.</p>
+            </div>
+
+            <div class="example-box">
+                <h3>💻 Practical Example:</h3>
+                <p>Instead of buying 5 separate computers for different tasks, you can buy 1 powerful computer and create 5 virtual computers inside it. Each virtual computer thinks it's a real, separate machine!</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Virtualization and Cloud Computing -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>☁️ Virtualization & Cloud Computing</h2>
+            </div>
+            <p><strong>The Connection:</strong> Virtualization is the foundation of cloud computing. Without virtualization, modern cloud services wouldn't exist!</p>
+
+            <div class="analogy-box">
+                <h3>🏨 Hotel Analogy:</h3>
+                <p><strong>Cloud = Hotel, Virtualization = Room Service</strong></p>
+                <p>• The hotel (cloud provider) has many rooms (virtual machines)</p>
+                <p>• You book a room (rent a virtual machine) based on your needs</p>
+                <p>• You don't own the building, but you get your own space</p>
+                <p>• You can upgrade to a bigger room or downgrade anytime</p>
+            </div>
+
+            <div class="example-box">
+                <h3>🌐 Real Examples:</h3>
+                <p><strong>Amazon AWS:</strong> Offers EC2 instances (virtual computers)</p>
+                <p><strong>Google Cloud:</strong> Provides virtual machines on-demand</p>
+                <p><strong>Microsoft Azure:</strong> Delivers virtual servers globally</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Virtualization Terminologies -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>📚 Key Terms You Must Know</h2>
+            </div>
+            
+            <div class="types-container">
+                <div class="type-card">
+                    <h3>🖥️ Host Machine</h3>
+                    <p>The physical computer where virtual machines run</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>💻 Guest Machine</h3>
+                    <p>The virtual computer running inside the host</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>🎮 Hypervisor</h3>
+                    <p>The software that manages virtual machines</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>🔧 VM (Virtual Machine)</h3>
+                    <p>A software-based computer that acts like a real computer</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>📦 Container</h3>
+                    <p>Lightweight alternative to VMs</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>🏗️ Infrastructure</h3>
+                    <p>The underlying physical hardware and software</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: What is Hypervisor? -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🎮 What is a Hypervisor?</h2>
+            </div>
+            <p><strong>Simple Definition:</strong> A hypervisor is like a <span class="highlight">traffic controller</span> that manages multiple virtual machines on one physical computer.</p>
+
+            <div class="analogy-box">
+                <h3>🎪 Circus Ringmaster Analogy:</h3>
+                <p>Think of a hypervisor as a circus ringmaster who:</p>
+                <p>• Controls multiple acts (VMs) simultaneously</p>
+                <p>• Gives each act their turn and resources</p>
+                <p>• Ensures no act interferes with others</p>
+                <p>• Manages the whole show (system resources)</p>
+            </div>
+
+            <div class="hypervisor-types">
+                <div class="hypervisor-card">
+                    <h3>Type 1: Bare Metal</h3>
+                    <p><strong>Runs directly on hardware</strong></p>
+                    <p>Examples: VMware vSphere, Microsoft Hyper-V</p>
+                    <p>Used in: Data centers, enterprises</p>
+                </div>
+                
+                <div class="hypervisor-card">
+                    <h3>Type 2: Hosted</h3>
+                    <p><strong>Runs on top of an OS</strong></p>
+                    <p>Examples: VirtualBox, VMware Workstation</p>
+                    <p>Used in: Personal computers, testing</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Different Approaches to Virtualization -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🛠️ Different Approaches to Virtualization</h2>
+            </div>
+            
+            <div class="vm-diagram">
+                <div class="vm-layer">
+                    <h3>🖥️ Full Virtualization</h3>
+                    <p>Complete simulation of hardware</p>
+                    <p><strong>Example:</strong> Running Windows on Mac</p>
+                </div>
+                
+                <div class="vm-layer">
+                    <h3>⚡ Para-Virtualization</h3>
+                    <p>Guest OS is aware it's virtualized</p>
+                    <p><strong>Example:</strong> Xen hypervisor</p>
+                </div>
+                
+                <div class="vm-layer">
+                    <h3>🎯 Hardware-Assisted</h3>
+                    <p>Uses CPU features for virtualization</p>
+                    <p><strong>Example:</strong> Intel VT-x, AMD-V</p>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h3>🏃‍♂️ Speed Comparison:</h3>
+                <p><strong>Full Virtualization:</strong> 🐌 Slower but more compatible</p>
+                <p><strong>Para-Virtualization:</strong> 🏃‍♂️ Faster but requires OS modification</p>
+                <p><strong>Hardware-Assisted:</strong> 🚀 Fastest with modern CPUs</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Virtual Machine Concepts -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>💻 Virtual Machine Concepts</h2>
+            </div>
+            
+            <div class="analogy-box">
+                <h3>🎭 Theater Stage Analogy:</h3>
+                <p>A virtual machine is like a theater stage where:</p>
+                <p>• The stage (VM) can host different plays (operating systems)</p>
+                <p>• Each play has its own props and actors (applications and data)</p>
+                <p>• The theater manager (hypervisor) controls lighting and sound (resources)</p>
+                <p>• Multiple stages can exist in one theater (multiple VMs on one server)</p>
+            </div>
+
+            <div class="vm-diagram">
+                <div class="vm-layer">
+                    <h3>🖥️ Virtual Hardware</h3>
+                    <p>Simulated CPU, RAM, Hard Drive, Network Card</p>
+                </div>
+                
+                <div class="vm-layer">
+                    <h3>🖱️ Operating System</h3>
+                    <p>Windows, Linux, macOS running inside VM</p>
+                </div>
+                
+                <div class="vm-layer">
+                    <h3>📱 Applications</h3>
+                    <p>Software running on the virtual OS</p>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h3>🎯 Key Features:</h3>
+                <p>• <strong>Isolation:</strong> VMs don't affect each other</p>
+                <p>• <strong>Encapsulation:</strong> Everything is contained in files</p>
+                <p>• <strong>Portability:</strong> Can move VMs between servers</p>
+                <p>• <strong>Snapshots:</strong> Save VM state at any point</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Benefits of Virtualization -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>✅ Benefits of Virtualization</h2>
+            </div>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h3>💰 Cost Savings</h3>
+                    <p>Buy 1 server instead of 10</p>
+                    <p>Less electricity, cooling, space</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>🚀 Better Resource Usage</h3>
+                    <p>Use 80% of server capacity instead of 20%</p>
+                    <p>No wasted computing power</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>🛡️ Disaster Recovery</h3>
+                    <p>Easy backup and restore</p>
+                    <p>Move VMs to different servers</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>🧪 Testing Environment</h3>
+                    <p>Test software without risk</p>
+                    <p>Create/destroy VMs quickly</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>🔧 Easy Maintenance</h3>
+                    <p>Update servers without downtime</p>
+                    <p>Move VMs during maintenance</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>📈 Scalability</h3>
+                    <p>Add more VMs instantly</p>
+                    <p>Adjust resources on-demand</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Types of Virtualization -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🔄 Types of Virtualization</h2>
+            </div>
+            
+            <div class="types-container">
+                <div class="type-card">
+                    <h3>🖥️ Server Virtualization</h3>
+                    <p>Multiple virtual servers on one physical server</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>🗄️ Storage Virtualization</h3>
+                    <p>Combine multiple storage devices into one</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>🌐 Network Virtualization</h3>
+                    <p>Create virtual networks over physical networks</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>🖱️ Desktop Virtualization</h3>
+                    <p>Run desktop OS in a virtual environment</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>📱 Application Virtualization</h3>
+                    <p>Run applications without installing them</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>📊 Data Virtualization</h3>
+                    <p>Access data from multiple sources as one</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Datacenter Virtualization -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🏢 Datacenter Virtualization</h2>
+            </div>
+            
+            <div class="analogy-box">
+                <h3>🏬 Shopping Mall Analogy:</h3>
+                <p>A datacenter is like a shopping mall where:</p>
+                <p>• The mall (datacenter) has many shops (servers)</p>
+                <p>• Each shop can be divided into smaller stalls (VMs)</p>
+                <p>• The mall management (datacenter virtualization) controls everything</p>
+                <p>• Resources like electricity and security are shared</p>
+            </div>
+
+            <div class="example-box">
+                <h3>💡 Key Benefits:</h3>
+                <p>• <strong>Resource Pooling:</strong> All servers work as one big resource</p>
+                <p>• <strong>Automated Management:</strong> Software handles routine tasks</p>
+                <p>• <strong>High Availability:</strong> If one server fails, VMs move to others</p>
+                <p>• <strong>Dynamic Scaling:</strong> Add resources when needed</p>
+            </div>
+
+            <div class="vm-diagram">
+                <div class="vm-layer">
+                    <h3>🖥️ Physical Servers</h3>
+                    <p>Multiple physical machines</p>
+                </div>
+                
+                <div class="vm-layer">
+                    <h3>🎮 Virtualization Layer</h3>
+                    <p>Hypervisor managing all servers</p>
+                </div>
+                
+                <div class="vm-layer">
+                    <h3>☁️ Virtual Resources</h3>
+                    <p>VMs distributed across servers</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Network & Desktop Virtualization -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🌐 Network & Desktop Virtualization</h2>
+            </div>
+            
+            <div class="hypervisor-types">
+                <div class="hypervisor-card">
+                    <h3>🌐 Network Virtualization</h3>
+                    <p><strong>What it is:</strong> Create virtual networks that work independently of physical network hardware</p>
+                    <p><strong>Example:</strong> VPN (Virtual Private Network)</p>
+                    <p><strong>Benefits:</strong> Better security, easier management, cost savings</p>
+                </div>
+                
+                <div class="hypervisor-card">
+                    <h3>🖥️ Desktop Virtualization</h3>
+                    <p><strong>What it is:</strong> Run desktop operating systems in virtual machines</p>
+                    <p><strong>Example:</strong> VDI (Virtual Desktop Infrastructure)</p>
+                    <p><strong>Benefits:</strong> Access desktop from anywhere, centralized management</p>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h3>🏢 Real-World Use Cases:</h3>
+                <p><strong>Network Virtualization:</strong> Company creates separate virtual networks for HR, Finance, and IT departments on the same physical network</p>
+                <p><strong>Desktop Virtualization:</strong> Employees access their work desktop from home, tablet, or any device through a web browser</p>
+            </div>
+        </div>
+
+        <!-- Slide 12: Summary -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🎯 Key Takeaways</h2>
+            </div>
+            
+            <div class="example-box">
+                <h3>🧠 Remember These Points:</h3>
+                <p>• <strong>Virtualization</strong> = Creating fake versions of real things</p>
+                <p>• <strong>Hypervisor</strong> = The manager of virtual machines</p>
+                <p>• <strong>VM</strong> = A computer inside a computer</p>
+                <p>• <strong>Cloud Computing</strong> = Built on virtualization technology</p>
+            </div>
+
+            <div class="analogy-box">
+                <h3>🎭 Final Analogy - Theater Production:</h3>
+                <p>Think of virtualization as a theater:</p>
+                <p>• <strong>Theater Building</strong> = Physical Server</p>
+                <p>• <strong>Stage Manager</strong> = Hypervisor</p>
+                <p>• <strong>Different Plays</strong> = Virtual Machines</p>
+                <p>• <strong>Actors & Props</strong> = Applications & Data</p>
+                <p>• <strong>Audience</strong> = End Users</p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h3>💰 Saves Money</h3>
+                    <p>Less hardware needed</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>🚀 Improves Efficiency</h3>
+                    <p>Better resource utilization</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>🛡️ Increases Security</h3>
+                    <p>Isolated environments</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>🔧 Easier Management</h3>
+                    <p>Centralized control</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">⬅️ Previous</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next ➡️</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progressBar');
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = n + 1;
+            document.getElementById('prevBtn').disabled = n === 0;
+            document.getElementById('nextBtn').disabled = n === totalSlides - 1;
+            
+            // Update progress bar
+            const progress = ((n + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') changeSlide(-1);
+            if (event.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
