@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud Notebook</title>
+    <title>AWS Fundamentals | Cloud Notebook</title>
     <style>
         * {
             margin: 0;
@@ -45,7 +45,7 @@
             margin-bottom: 1.5rem;
             font-weight: 700;
             letter-spacing: -0.025em;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            background: linear-gradient(90deg, #FF9900, #FF9900);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: inline-block;
@@ -84,12 +84,12 @@
         .topic-card:hover {
             transform: translateY(-6px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
-            border-color: #bfdbfe;
-            background: #f8fafc;
+            border-color: #FF9900;
+            background: #fff7ed;
         }
 
         .topic-card h2 {
-            color: #1e40af;
+            color: #FF9900;
             font-size: 1.5rem;
             margin-bottom: 1rem;
             font-weight: 600;
@@ -103,8 +103,8 @@
 
         .btn {
             background: white;
-            color: #3b82f6;
-            border: 1px solid #3b82f6;
+            color: #FF9900;
+            border: 1px solid #FF9900;
             padding: 0.75rem 1.75rem;
             border-radius: 50px;
             cursor: pointer;
@@ -117,10 +117,10 @@
         }
 
         .btn:hover {
-            background: #3b82f6;
+            background: #FF9900;
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 10px 15px -3px rgba(255, 153, 0, 0.2);
         }
 
         .author {
@@ -132,12 +132,26 @@
         }
 
         .author a {
-            color: #3b82f6;
+            color: #FF9900;
             text-decoration: none;
             font-weight: 500;
         }
 
         .author a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #FF9900;
             text-decoration: underline;
         }
 
@@ -158,26 +172,28 @@
 </head>
 <body>
     <div class="container">
-        <h1><span class="emoji">📒</span> Cloud Notebook</h1>
-        <p class="subtitle">Your interactive guide to cloud computing concepts</p>
+        <a href="index.html" class="back-link">←</a>
+        
+        <h1><span class="emoji">🚀</span> AWS Fundamentals</h1>
+        <p class="subtitle">Core AWS services that form the foundation of cloud infrastructure</p>
         
         <div class="topics-grid">
             <div class="topic-card">
-                <h2>🖥️ Virtualization</h2>
-                <p>Learn how virtualization works, its benefits, and how it powers modern cloud computing.</p>
-                <a href="virtualization.html" class="btn">Explore Virtualization</a>
+                <h2>👤 IAM</h2>
+                <p>Identity and Access Management controls access to AWS services and resources securely.</p>
+                <a href="iam.html" class="btn">Explore IAM</a>
             </div>
             
             <div class="topic-card">
-                <h2>☁️ Cloud Computing</h2>
-                <p>Discover cloud service models, deployment types, and key benefits of cloud technology.</p>
-                <a href="cloud-computing.html" class="btn">Explore Cloud Computing</a>
+                <h2>📦 S3</h2>
+                <p>Simple Storage Service provides scalable object storage with high availability.</p>
+                <a href="s3.html" class="btn">Explore S3</a>
             </div>
-
+            
             <div class="topic-card">
-                <h2>🚀 AWS Fundamentals</h2>
-                <p>Explore AWS core services across Compute, Storage, Database, Networking, and Security - the 5 pillars of AWS.</p>
-                <a href="aws-fundamentals.html" class="btn">Explore AWS</a>
+                <h2>🖥️ EC2</h2>
+                <p>Elastic Compute Cloud offers resizable compute capacity in the cloud.</p>
+                <a href="ec2.html" class="btn">Explore EC2</a>
             </div>
         </div>
         
