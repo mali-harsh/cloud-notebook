@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS IAM Training - Beginner Friendly</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        .presentation-container {
+            width: 90%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            position: relative;
+            padding-bottom: 100px; /* Add padding at bottom for navigation */
+        }
+
+        .slide {
+            display: none;
+            padding: 50px;
+            min-height: 650px;
+            position: relative;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #0f172a;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            color: #1e40af;
+            font-size: 1.375rem;
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 600;
+        }
+
+        p, li {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: #475569;
+            margin-bottom: 1rem;
+        }
+
+        .example-box {
+            background: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 1.75rem;
+            border-radius: 12px;
+            margin: 1.75rem 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .example-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.1);
+            border-color: #93c5fd;
+        }
+
+        .analogy-box {
+            background: #f8fafc;
+            border-left: 4px solid #10b981;
+            padding: 1.75rem;
+            border-radius: 12px;
+            margin: 1.75rem 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .analogy-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.1);
+            border-color: #a7f3d0;
+        }
+
+        .key-points {
+            background: #f8fafc;
+            border-left: 4px solid #8b5cf6;
+            padding: 1.75rem;
+            border-radius: 12px;
+            margin: 1.75rem 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .key-points:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.1);
+            border-color: #c4b5fd;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.75rem 0;
+        }
+
+        .benefit-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 1.75rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+            border-color: #bfdbfe;
+            background: #f8fafc;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+            width: 90%;
+            max-width: 1200px;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            background: white;
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+            padding: 0.75rem 1.75rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            background: white;
+            color: #94a3b8;
+            border-color: #cbd5e1;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: white;
+            color: #475569;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            font-weight: 500;
+        }
+
+        .highlight {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+        }
+
+        .intro-animation {
+            text-align: center;
+            padding: 3rem 1.5rem;
+        }
+
+        .intro-animation h1 {
+            font-size: 3rem;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .intro-animation h1 span.emoji {
+            -webkit-text-fill-color: initial;
+            background: none;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .intro-animation p {
+            font-size: 1.375rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+            pointer-events: none;
+        }
+
+        .slide-header {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .slide-header h2 {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .slide-header h2::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 3px;
+        }
+
+        .types-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.75rem 0;
+        }
+
+        .type-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 1.75rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .type-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+            border-color: #a7f3d0;
+            background: #f8fafc;
+        }
+
+        .practical-icon {
+            font-size: 3em;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 1.5rem;
+                min-height: 500px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .benefits-grid, .types-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">8</span>
+        </div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="intro-animation">
+                <h1><span class="emoji">🔐</span> AWS Identity and Access Management (IAM)</h1>
+                <p>We'll explore how to securely manage access to your AWS resources</p>
+                <div class="key-points">
+                    <h3>🎯 What You'll Learn Today:</h3>
+                    <p>• What is IAM and why it's crucial in AWS</p>
+                    <p>• Principals - Who can access your AWS resources</p>
+                    <p>• Authentication - How AWS verifies identity</p>
+                    <p>• Authorization - What actions are allowed</p>
+                    <p>• Hands-on practice with real scenarios</p>
+                </div>
+            </div>
+            <div class="analogy-box">
+                <h3>🏢 Think of IAM like a Company Security System</h3>
+                <p>Just like your office building has security badges, access cards, and different permissions for different employees, AWS IAM controls who can access what in your cloud environment!</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: What is IAM -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🤔 What is AWS IAM?</h2>
+            </div>
+            <div class="analogy-box">
+                <h3>🏠 Real-World Analogy: Your House Security</h3>
+                <p><strong>Your House = AWS Account</strong><br>
+                <strong>Keys & Access Cards = IAM Credentials</strong><br>
+                <strong>Family Members & Guests = IAM Users</strong><br>
+                <strong>Room Permissions = IAM Policies</strong></p>
+            </div>
+            
+            <div class="key-points">
+                <h3>IAM is AWS's Security Service that:</h3>
+                <p>• <strong>Controls WHO</strong> can access your AWS resources</p>
+                <p>• <strong>Controls WHAT</strong> they can do with those resources</p>
+                <p>• <strong>Controls WHEN</strong> and <strong>WHERE</strong> they can access</p>
+                <p>• Is <strong>FREE</strong> to use (no additional charges)</p>
+                <p>• Works across <strong>ALL</strong> AWS services</p>
+            </div>
+
+            <div class="example-box">
+                <h3>💡 Simple Example:</h3>
+                <p>Imagine you have a company AWS account. You want your developer to access only development servers, your accountant to see only billing, and your intern to have read-only access. IAM makes this possible!</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Principals -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>👥 Principals: WHO can access?</h2>
+            </div>
+            
+            <div class="analogy-box">
+                <h3>🎭 Think of Principals as "Actors" in a Play</h3>
+                <p>Every actor (principal) has a role and performs specific actions on stage (AWS)</p>
+            </div>
+
+            <h3>Types of Principals:</h3>
+            
+            <div class="example-box">
+                <h3>1. 👤 IAM Users</h3>
+                <p><strong>Who:</strong> Individual people (employees, contractors)<br>
+                <strong>Example:</strong> Vikram (Developer), Harsh (Admin), Yash (Intern)<br>
+                <strong>Use Case:</strong> Long-term access for specific individuals</p>
+            </div>
+
+            <div class="example-box">
+                <h3>2. 👥 IAM Groups</h3>
+                <p><strong>Who:</strong> Collection of users with similar roles<br>
+                <strong>Example:</strong> "Developers", "Interns", "Admins"<br>
+                <strong>Use Case:</strong> Easier management of multiple users</p>
+            </div>
+
+            <div class="example-box">
+                <h3>3. 🤖 IAM Roles</h3>
+                <p><strong>Who:</strong> Applications, services, or temporary access<br>
+                <strong>Example:</strong> "EC2-Access-Role", "Lambda-Execution-Role"<br>
+                <strong>Use Case:</strong> Services accessing other services</p>
+            </div>
+
+            <div class="highlight">
+                <strong>💡 Remember:</strong> Users are for humans, Roles are for applications and temporary access!
+            </div>
+        </div>
+
+        <!-- Slide 4: Authentication -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🔑 Authentication: HOW do we verify identity?</h2>
+            </div>
+            
+            <div class="analogy-box">
+                <h3>🏪 Like Showing ID at a Store</h3>
+                <p>Before you can buy sim card, the Telecom regulations asks for your ID to verify you are who you claim to be. AWS does the same thing!</p>
+            </div>
+
+            <h3>Authentication Methods:</h3>
+            
+            <div class="example-box">
+                <h3>1. 🔐 Username & Password</h3>
+                <p><strong>What:</strong> Traditional login credentials<br>
+                <strong>Used for:</strong> AWS Management Console (web interface)<br>
+                <strong>Example:</strong> harsh@company.com / SecurePassword123</p>
+            </div>
+
+            <div class="example-box">
+                <h3>2. 🗝️ Access Keys</h3>
+                <p><strong>What:</strong> Access Key ID + Secret Access Key<br>
+                <strong>Used for:</strong> Programmatic access (APIs, CLI)<br>
+                <strong>Example:</strong> AKIAIOSFODNN7EXAMPLE / wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</p>
+            </div>
+
+            <div class="example-box">
+                <h3>3. 📱 Multi-Factor Authentication (MFA)</h3>
+                <p><strong>What:</strong> Extra security layer (something you know + something you have)<br>
+                <strong>Example:</strong> Password + Phone verification code<br>
+                <strong>Best Practice:</strong> Always enable for important accounts!</p>
+            </div>
+
+            <div class="key-points">
+                <h3>🛡️ Security Best Practices:</h3>
+                <p>• Never share access keys</p>
+                <p>• Rotate credentials regularly</p>
+                <p>• Always use MFA for admin accounts</p>
+                <p>• Use roles instead of long-term keys when possible</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Authorization -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>📋 Authorization: WHAT can they do?</h2>
+            </div>
+            
+            <div class="analogy-box">
+                <h3>🏢 Like Job Permissions at Work</h3>
+                <p>Once you badge into the office (authentication), your job role determines what floors you can access, what systems you can use, and what actions you can perform (authorization).</p>
+            </div>
+
+            <h3>How Authorization Works:</h3>
+            
+            <div class="example-box">
+                <h3>1. 📄 IAM Policies</h3>
+                <p><strong>What:</strong> JSON documents that define permissions<br>
+                <strong>Structure:</strong> Effect (Allow/Deny) + Action + Resource<br>
+                <strong>Example:</strong> "Allow harsh to read S3 buckets but not delete them"</p>
+            </div>
+
+            <div class="example-box">
+                <h3>2. 🏷️ Policy Types</h3>
+                <p><strong>Identity-based:</strong> Attached to users, groups, roles<br>
+                <strong>Resource-based:</strong> Attached to resources (like S3 buckets)<br>
+                <strong>AWS Managed:</strong> Pre-built by AWS<br>
+                <strong>Customer Managed:</strong> Created by you</p>
+            </div>
+
+            <div class="key-points">
+                <h3>🎯 Simple Policy Example:</h3>
+                <div style="background: #f1f5f9; color: #1e293b; padding: 15px; border-radius: 8px; font-family: monospace; margin-top: 15px; border-left: 4px solid #3b82f6;">
+{<br>
+&nbsp;&nbsp;"Effect": "Allow",<br>
+&nbsp;&nbsp;"Action": "s3:GetObject",<br>
+&nbsp;&nbsp;"Resource": "arn:aws:s3:::my-bucket/*"<br>
+}
+                </div>
+                <p style="margin-top: 10px;"><strong>Translation:</strong> "Allow reading files from my-bucket"</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Other Key Features -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🚀 Other Key Features</h2>
+            </div>
+            
+            <div class="example-box">
+                <h3>1. 🔄 Temporary Credentials (STS)</h3>
+                <p><strong>What:</strong> Short-term access tokens<br>
+                <strong>Use Case:</strong> Mobile apps, cross-account access<br>
+                <strong>Benefit:</strong> More secure than long-term keys</p>
+            </div>
+
+            <div class="example-box">
+                <h3>2. 🔗 Identity Federation</h3>
+                <p><strong>What:</strong> Use external identity providers<br>
+                <strong>Example:</strong> Login with Google, Microsoft, or company Active Directory<br>
+                <strong>Benefit:</strong> Single sign-on experience</p>
+            </div>
+
+            <div class="example-box">
+                <h3>3. 📊 Access Analyzer</h3>
+                <p><strong>What:</strong> Identifies resources shared with external entities<br>
+                <strong>Use Case:</strong> Security auditing and compliance<br>
+                <strong>Benefit:</strong> Prevents accidental data exposure</p>
+            </div>
+
+            <div class="example-box">
+                <h3>4. 📈 CloudTrail Integration</h3>
+                <p><strong>What:</strong> Logs all IAM actions<br>
+                <strong>Use Case:</strong> Auditing and troubleshooting<br>
+                <strong>Benefit:</strong> Complete activity history</p>
+            </div>
+
+            <div class="highlight">
+                <strong>🎖️ Best Practice:</strong> Follow the "Principle of Least Privilege" - Give users only the minimum permissions they need to do their job!
+            </div>
+        </div>
+
+        <!-- Slide 7: Practical Hands-On Plan -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🛠️ Practical Learning Plan</h2>
+            </div>
+            
+            <div class="key-points">
+                <h3>What We'll Practice Today:</h3>
+                <p>• Create your first IAM user</p>
+                <p>• Set up groups and assign permissions</p>
+                <p>• Create and attach policies</p>
+                <p>• Configure MFA</p>
+                <p>• Work with roles</p>
+            </div>
+        </div>
+
+
+        <!-- Slide 8: Summary -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>📚 Summary & Key Takeaways</h2>
+            </div>
+            
+            <div class="key-points">
+                <h3>🎯 What We Learned:</h3>
+                <p>• <strong>IAM is the foundation</strong> of AWS security</p>
+                <p>• <strong>Principals</strong> define WHO (Users, Groups, Roles)</p>
+                <p>• <strong>Authentication</strong> verifies identity (passwords, keys, MFA)</p>
+                <p>• <strong>Authorization</strong> controls permissions (policies)</p>
+                <p>• <strong>Best practices</strong> keep your AWS account secure</p>
+            </div>
+
+            <div class="analogy-box">
+                <h3>🧠 Memory Aid: "PAA Framework"</h3>
+                <p><strong>P</strong>rincipals - WHO<br>
+                <strong>A</strong>uthentication - HOW they prove identity<br>
+                <strong>A</strong>uthorization - WHAT they can do</p>
+            </div>
+
+            <div class="example-box">
+                <h3>🚀 Next Steps:</h3>
+                <p>1. Practice the hands-on exercises<br>
+                2. Experiment with different policies<br>
+                3. Set up MFA on your own account<br>
+                4. Ready to learn about AWS services like S3, EC2!</p>
+            </div>
+
+            <div class="highlight">
+                <strong>💪 Remember:</strong> IAM might seem complex at first, but with practice, it becomes second nature. You're building the foundation for all your future AWS learning!
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">⬅️ Previous</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next ➡️</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progressBar');
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = n + 1;
+            document.getElementById('prevBtn').disabled = n === 0;
+            document.getElementById('nextBtn').disabled = n === totalSlides - 1;
+            
+            // Update progress bar
+            const progress = ((n + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') changeSlide(-1);
+            if (event.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
