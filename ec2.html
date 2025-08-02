@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS EC2 Training - Beginner Friendly</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        .presentation-container {
+            width: 90%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            position: relative;
+            padding-bottom: 100px;
+        }
+
+        .slide {
+            display: none;
+            padding: 50px;
+            min-height: 650px;
+            position: relative;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #0f172a;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            color: #1e40af;
+            font-size: 1.375rem;
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 600;
+        }
+
+        p, li {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: #475569;
+            margin-bottom: 1rem;
+        }
+
+        .example-box {
+            background: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 1.75rem;
+            border-radius: 12px;
+            margin: 1.75rem 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .example-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.1);
+            border-color: #93c5fd;
+        }
+
+        .analogy-box {
+            background: #f8fafc;
+            border-left: 4px solid #10b981;
+            padding: 1.75rem;
+            border-radius: 12px;
+            margin: 1.75rem 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .analogy-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.1);
+            border-color: #a7f3d0;
+        }
+
+        .key-points {
+            background: #f8fafc;
+            border-left: 4px solid #8b5cf6;
+            padding: 1.75rem;
+            border-radius: 12px;
+            margin: 1.75rem 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .key-points:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.1);
+            border-color: #c4b5fd;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.75rem 0;
+        }
+
+        .benefit-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 1.75rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+            border-color: #bfdbfe;
+            background: #f8fafc;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+            width: 90%;
+            max-width: 1200px;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            background: white;
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+            padding: 0.75rem 1.75rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            background: white;
+            color: #94a3b8;
+            border-color: #cbd5e1;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: white;
+            color: #475569;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            font-weight: 500;
+        }
+
+        .highlight {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+        }
+
+        .intro-animation {
+            text-align: center;
+            padding: 3rem 1.5rem;
+        }
+
+        .intro-animation h1 {
+            font-size: 3rem;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, #FF9900, #FF9900);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .intro-animation h1 span.emoji {
+            -webkit-text-fill-color: initial;
+            background: none;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .intro-animation p {
+            font-size: 1.375rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #FF9900, #FF9900);
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+            pointer-events: none;
+        }
+
+        .slide-header {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .slide-header h2 {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .slide-header h2::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #FF9900, #FF9900);
+            border-radius: 3px;
+        }
+
+        .types-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.75rem 0;
+        }
+
+        .type-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 1.75rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .type-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+            border-color: #a7f3d0;
+            background: #f8fafc;
+        }
+
+        .practical-icon {
+            font-size: 3em;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 1.5rem;
+                min-height: 500px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .benefits-grid, .types-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">8</span>
+        </div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="intro-animation">
+                <h1><span class="emoji">🖥️</span> Amazon Elastic Compute Cloud (EC2)</h1>
+                <p>Your virtual servers in the AWS cloud</p>
+                <div class="key-points">
+                    <h3>🎯 What You'll Learn Today:</h3>
+                    <p>• What is EC2 and why it's fundamental to AWS</p>
+                    <p>• Understanding virtual machines in the cloud</p>
+                    <p>• EC2 instance types and configurations</p>
+                    <p>• Launching and managing EC2 instances</p>
+                    <p>• Scaling and cost optimization strategies</p>
+                </div>
+            </div>
+            <div class="analogy-box">
+                <h3>🏢 Think of EC2 Like a Rental Car Service</h3>
+                <p>Just like you can rent different car models for different needs (compact for city driving, SUV for family trips), EC2 lets you rent different virtual servers for different computing needs!</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: What is EC2 -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🤔 What is Amazon EC2?</h2>
+            </div>
+            
+            <div class="key-points">
+                <h3>Amazon Elastic Compute Cloud (EC2) is:</h3>
+                <p>• A web service that provides <strong>resizable compute capacity</strong> in the cloud</p>
+                <p>• Essentially <strong>virtual servers</strong> you can launch in minutes</p>
+                <p>• Designed to make web-scale cloud computing easier</p>
+                <p>• Provides complete control of your computing resources</p>
+                <p>• Allows you to pay only for capacity you actually use</p>
+            </div>
+
+            <div class="analogy-box">
+                <h3>🏠 Real-World Analogy: Your Office Computers</h3>
+                <p><strong>Physical Office Computers = On-premises servers</strong><br>
+                <strong>EC2 Instances = Virtual computers in the cloud</strong><br>
+                <strong>IT Department = AWS manages the hardware</strong><br>
+                <strong>Office Space = AWS data centers</strong></p>
+            </div>
+
+            <div class="example-box">
+                <h3>💡 Simple Example:</h3>
+                <p>Imagine you're developing a mobile app. Instead of buying expensive servers that sit idle most of the time, you can launch EC2 instances when you need them, scale up during peak times, and shut them down when not needed - paying only for what you use.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Key Benefits -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🌟 Key Benefits of EC2</h2>
+            </div>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h3>⚡ Elastic</h3>
+                    <p>Scale capacity up or down within minutes</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>💰 Cost-Effective</h3>
+                    <p>Pay only for what you use with no long-term commitments</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>🔒 Secure</h3>
+                    <p>Built-in security with AWS networking and IAM</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>🌐 Flexible</h3>
+                    <p>Choose OS, software, CPU, memory, storage, and networking</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>⚙️ Reliable</h3>
+                    <p>99.99% availability SLA with multiple Availability Zones</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>🚀 Fast</h3>
+                    <p>Launch instances in minutes versus weeks for physical servers</p>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <strong>💡 Remember:</strong> EC2 is more flexible, cost-effective, and faster than managing on-premises servers. You only pay for running instances, not stopped or terminated ones!
+            </div>
+        </div>
+
+        <!-- Slide 4: How EC2 Works -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🛠️ How EC2 Works</h2>
+            </div>
+            
+            <div class="analogy-box">
+                <h3>🎭 Think of EC2 Like a Theater Stage</h3>
+                <p>The physical host is the theater building, the hypervisor is the stage manager, and each EC2 instance is an actor with their own script (OS and applications).</p>
+            </div>
+
+            <h3>Key Concepts:</h3>
+            
+            <div class="example-box">
+                <h3>1. 🏗️ Multi-Tenancy</h3>
+                <p><strong>What:</strong> Multiple VMs share physical host resources<br>
+                <strong>Managed by:</strong> Hypervisor software<br>
+                <strong>AWS Handles:</strong> Resource sharing and isolation between instances</p>
+            </div>
+
+            <div class="example-box">
+                <h3>2. 🖥️ Virtual Machines</h3>
+                <p><strong>Choice:</strong> Windows or Linux operating systems<br>
+                <strong>Control:</strong> Complete control over software configuration<br>
+                <strong>Flexibility:</strong> Thousands of instances with different configurations</p>
+            </div>
+
+            <div class="example-box">
+                <h3>3. 📈 Vertical Scaling</h3>
+                <p><strong>What:</strong> Resizing instance types (changing CPU/memory)<br>
+                <strong>When:</strong> When your application needs more power<br>
+                <strong>Benefit:</strong> No need to migrate to a new server</p>
+            </div>
+
+            <div class="example-box">
+                <h3>4. 🌐 Networking</h3>
+                <p><strong>Control:</strong> Public/private accessibility<br>
+                <strong>Security:</strong> Configure what requests reach your instances<br>
+                <strong>Integration:</strong> Works with other AWS networking services</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Instance Types -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>📊 EC2 Instance Types</h2>
+            </div>
+            
+            <div class="analogy-box">
+                <h3>🚗 Think of Instance Types Like Vehicle Classes</h3>
+                <p>Just as you'd choose a compact car, SUV, or truck based on your needs, you select EC2 instance types based on your computing requirements.</p>
+            </div>
+
+            <div class="types-container">
+                <div class="type-card">
+                    <h3>General Purpose</h3>
+                    <p>Balanced compute, memory, and networking</p>
+                    <p><strong>Use Case:</strong> Web servers, small databases</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>Compute Optimized</h3>
+                    <p>High-performance processors</p>
+                    <p><strong>Use Case:</strong> Batch processing, gaming servers</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>Memory Optimized</h3>
+                    <p>Fast performance for large datasets</p>
+                    <p><strong>Use Case:</strong> In-memory databases, real-time analytics</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>Storage Optimized</h3>
+                    <p>High, sequential read/write access</p>
+                    <p><strong>Use Case:</strong> Data warehousing, distributed file systems</p>
+                </div>
+                
+                <div class="type-card">
+                    <h3>Accelerated Computing</h3>
+                    <p>Hardware accelerators like GPUs</p>
+                    <p><strong>Use Case:</strong> Machine learning, graphics rendering</p>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <strong>💡 Tip:</strong> AWS provides over 400 instance types to match virtually any workload requirement!
+            </div>
+        </div>
+
+        <!-- Slide 6: Pricing Models -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>💰 EC2 Pricing Models</h2>
+            </div>
+            
+            <div class="example-box">
+                <h3>1. On-Demand Instances</h3>
+                <p><strong>What:</strong> Pay by the second with no long-term commitment<br>
+                <strong>Best for:</strong> Short-term, unpredictable workloads<br>
+                <strong>Example:</strong> Testing new applications</p>
+            </div>
+
+            <div class="example-box">
+                <h3>2. Reserved Instances</h3>
+                <p><strong>What:</strong> 1-3 year commitment for significant discount<br>
+                <strong>Best for:</strong> Steady-state applications<br>
+                <strong>Example:</strong> Production databases</p>
+            </div>
+
+            <div class="example-box">
+                <h3>3. Spot Instances</h3>
+                <p><strong>What:</strong> Bid for unused capacity at steep discounts<br>
+                <strong>Best for:</strong> Fault-tolerant, flexible workloads<br>
+                <strong>Example:</strong> Big data processing</p>
+            </div>
+
+            <div class="example-box">
+                <h3>4. Savings Plans</h3>
+                <p><strong>What:</strong> Commit to usage amount for lower rates<br>
+                <strong>Best for:</strong> Predictable usage patterns<br>
+                <strong>Example:</strong> Enterprise applications</p>
+            </div>
+
+            <div class="key-points">
+                <h3>🎯 Cost Optimization Strategy:</h3>
+                <p>• Use Reserved Instances for baseline capacity</p>
+                <p>• Use Spot Instances for flexible workloads</p>
+                <p>• Use On-Demand for unpredictable spikes</p>
+                <p>• Right-size instances to match needs</p>
+                <p>• Monitor and adjust regularly</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Practical Hands-On Plan -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🛠️ Practical Learning Plan</h2>
+            </div>
+            
+            <div class="key-points">
+                <h3>What We'll Practice Today:</h3>
+                <p>• Launch your first EC2 instance</p>
+                <p>• Connect to your instance using SSH/RDP</p>
+                <p>• Install software and configure your server</p>
+                <p>• Explore different instance types</p>
+                <p>• Learn about security groups and key pairs</p>
+            </div>
+
+            <div class="analogy-box">
+                <h3>🧑‍🍳 Think Like a Chef</h3>
+                <p>Launching an EC2 instance is like setting up a new kitchen. You choose the appliances (instance type), ingredients (AMI), tools (security groups), and recipes (user data) to create your perfect computing environment.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Summary -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>📚 Summary & Key Takeaways</h2>
+            </div>
+            
+            <div class="key-points">
+                <h3>🎯 What We Learned:</h3>
+                <p>• <strong>EC2 provides virtual servers</strong> in the AWS cloud</p>
+                <p>• <strong>Highly flexible</strong> - choose OS, software, and configurations</p>
+                <p>• <strong>Cost-effective</strong> - pay only for what you use</p>
+                <p>• <strong>Scalable</strong> - resize instances or scale horizontally</p>
+                <p>• <strong>Multiple instance types</strong> for different workloads</p>
+                <p>• <strong>Various pricing options</strong> to optimize costs</p>
+            </div>
+
+            <div class="analogy-box">
+                <h3>🧠 Memory Aid: "EC2 is Virtual Compute"</h3>
+                <p><strong>E</strong>lastic - Scale up/down easily<br>
+                <strong>C</strong>omplete control - Over your virtual servers<br>
+                <strong>2</strong> - The cloud (as opposed to physical servers)</p>
+            </div>
+
+            <div class="example-box">
+                <h3>🚀 Next Steps:</h3>
+                <p>1. Practice launching EC2 instances<br>
+                2. Experiment with different instance types<br>
+                3. Learn about auto-scaling and load balancing<br>
+                4. Explore storage options like EBS and EFS<br>
+                5. Ready to learn about other AWS services!</p>
+            </div>
+
+            <div class="highlight">
+                <strong>💪 Remember:</strong> EC2 is the foundation of compute in AWS. Mastering it will give you confidence to work with other AWS services!
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">⬅️ Previous</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next ➡️</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progressBar');
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = n + 1;
+            document.getElementById('prevBtn').disabled = n === 0;
+            document.getElementById('nextBtn').disabled = n === totalSlides - 1;
+            
+            // Update progress bar
+            const progress = ((n + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') changeSlide(-1);
+            if (event.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
