@@ -29,15 +29,16 @@
         }
 
         body.light-mode .navbar {
-            background: rgba(245, 247, 250, 0.9);
+            background: rgba(245, 247, 250, 0.95) !important;
+            backdrop-filter: blur(20px);
         }
 
         body.light-mode .nav-links a {
-            color: #333;
+            color: #333 !important;
         }
 
         body.light-mode .nav-links a:hover {
-            color: #3a7bd5;
+            color: #3a7bd5 !important;
         }
 
         body.light-mode .feature-card {
@@ -121,6 +122,8 @@
 
         body.light-mode .logo {
             background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         @keyframes glow {
@@ -175,7 +178,9 @@
         }
 
         body.light-mode .hero h1 {
-            background: linear-gradient(45deg, #3a7bd5, #00d2ff, #3a7bd5);
+            background: linear-gradient(45deg, #333, #3a7bd5, #00d2ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         @keyframes textShine {
@@ -362,7 +367,9 @@
         }
 
         body.light-mode .features h2 {
-            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            background: linear-gradient(45deg, #333, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .features-grid {
@@ -443,7 +450,9 @@
         }
 
         body.light-mode .testimonials h2 {
-            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            background: linear-gradient(45deg, #333, #00d2ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .testimonial-grid {
@@ -704,9 +713,15 @@
             if (window.scrollY > 50) {
                 navbar.style.background = 'rgba(10, 10, 10, 0.95)';
                 navbar.style.backdropFilter = 'blur(20px)';
+                if (document.body.classList.contains('light-mode')) {
+                    navbar.style.background = 'rgba(245, 247, 250, 0.95)';
+                }
             } else {
                 navbar.style.background = 'rgba(10, 10, 10, 0.9)';
                 navbar.style.backdropFilter = 'blur(10px)';
+                if (document.body.classList.contains('light-mode')) {
+                    navbar.style.background = 'rgba(245, 247, 250, 0.9)';
+                }
             }
         });
 
@@ -808,12 +823,36 @@
             
             // Change button emoji
             themeToggle.textContent = isLightMode ? '🌙' : '🌓';
+            
+            // Update navbar background
+            const navbar = document.querySelector('.navbar');
+            if (isLightMode) {
+                if (window.scrollY > 50) {
+                    navbar.style.background = 'rgba(245, 247, 250, 0.95)';
+                } else {
+                    navbar.style.background = 'rgba(245, 247, 250, 0.9)';
+                }
+            } else {
+                if (window.scrollY > 50) {
+                    navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+                } else {
+                    navbar.style.background = 'rgba(10, 10, 10, 0.9)';
+                }
+            }
         });
 
         // Check for saved theme preference
         if (localStorage.getItem('lightMode') === 'true') {
             document.body.classList.add('light-mode');
             themeToggle.textContent = '🌙';
+            
+            // Update navbar background if light mode is enabled
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(245, 247, 250, 0.95)';
+            } else {
+                navbar.style.background = 'rgba(245, 247, 250, 0.9)';
+            }
         }
 
         // CSS for glitch effect
