@@ -12,21 +12,25 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            color: #1e293b;
+            line-height: 1.6;
         }
 
         .presentation-container {
             width: 90%;
             max-width: 1000px;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
             overflow: hidden;
+            position: relative;
+            padding-bottom: 100px; /* Add padding at bottom for navigation */
         }
 
         .slide {
@@ -34,16 +38,16 @@
             padding: 40px;
             min-height: 600px;
             position: relative;
-            animation: slideIn 0.5s ease-in-out;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .slide.active {
             display: block;
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h1 {
@@ -56,7 +60,7 @@
         }
 
         h2 {
-            color: #34495e;
+            color: #1e293b;
             font-size: 2em;
             margin-bottom: 25px;
             text-align: center;
@@ -72,11 +76,11 @@
         .content {
             font-size: 1.1em;
             line-height: 1.8;
-            color: #34495e;
+            color: #475569;
         }
 
         .example-box {
-            background: #ecf0f1;
+            background: #f8fafc;
             padding: 20px;
             border-radius: 10px;
             margin: 20px 0;
@@ -96,17 +100,19 @@
         }
 
         .benefit-card {
-            background: linear-gradient(135deg, #74b9ff, #0984e3);
-            color: white;
+            background: white;
+            border: 1px solid #e2e8f0;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
             transform: translateY(0);
             transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         .benefit-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
         .cloud-types {
@@ -123,6 +129,7 @@
             border-radius: 10px;
             text-align: center;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         .cloud-type:hover {
@@ -255,9 +262,41 @@
             margin: 15px 0;
             border-left: 4px solid #27ae60;
         }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
     <div class="presentation-container">
         <div class="slide-counter">
             <span id="current-slide">1</span> / <span id="total-slides">15</span>
@@ -867,6 +906,7 @@
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
         const totalSlides = slides.length;
+        const progressBar = document.getElementById('progressBar');
 
         document.getElementById('total-slides').textContent = totalSlides;
 
@@ -884,6 +924,10 @@
                 if (prevBtn) prevBtn.disabled = currentSlide === 0;
                 if (nextBtn) nextBtn.disabled = currentSlide === totalSlides - 1;
             }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
         }
 
         function changeSlide(direction) {
