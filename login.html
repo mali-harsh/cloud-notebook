@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Cloud Notebook</title>
+    <style>
+        /* Reuse your existing styles with some additions */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #0a0a0a;
+            color: white;
+            overflow-x: hidden;
+            transition: all 0.5s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        body.light-mode {
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .login-container {
+            background: rgba(30, 30, 40, 0.8);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+        }
+
+        body.light-mode .login-container {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(58, 123, 213, 0.2);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ffffff, #64c8ff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        body.light-mode .login-header h1 {
+            background: linear-gradient(45deg, #333, #3a7bd5, #00d2ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+        }
+
+        body.light-mode .login-form input {
+            background: rgba(58, 123, 213, 0.1);
+            color: #333;
+        }
+
+        .login-form input::placeholder {
+            color: #b3b3b3;
+        }
+
+        body.light-mode .login-form input::placeholder {
+            color: #666;
+        }
+
+        .login-form button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #64c8ff, #a855f7);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .login-form button {
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+        }
+
+        .login-form button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #64c8ff;
+            text-decoration: none;
+        }
+
+        body.light-mode .back-link a {
+            color: #3a7bd5;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Login</h1>
+            <p>Access your Cloud Notebook account</p>
+        </div>
+        <form class="login-form" id="loginForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Sign In</button>
+        </form>
+        <div class="error-message" id="errorMessage">
+            Invalid username or password
+        </div>
+        <div class="back-link">
+            <a href="index.html">← Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+    // User database
+    const users = {
+        "batch1": {
+            password: "password1",
+            syllabus: "https://www.notion.so/syllabus-batch1",
+            attendance: "https://www.notion.so/attendance-batch1",
+            notes: "https://www.notion.so/notes-batch1",
+            documents: "https://www.notion.so/documents-batch1"
+        },
+        "batch2": {
+            password: "kyJbof-cupki7-runsoh", 
+            syllabus: "https://far-smell-825.notion.site/2340f2afffb280f59aaed4b5ee902f47?v=2390f2afffb280b88f6e000c93afc1a3",
+            attendance: "https://far-smell-825.notion.site/2440f2afffb2806d9246c909a278583a?v=2440f2afffb28165aa89000c4dd6c773&source=copy_link",
+            notes: "https://far-smell-825.notion.site/AWS-Notes-Batch-2-2550f2afffb2802c9764d42e0b24db3f?source=copy_link",
+            documents: "https://www.notion.so/documents-batch2"
+        },
+        "batch3": {
+            password: "password3",
+            syllabus: "https://www.notion.so/syllabus-batch3",
+            attendance: "https://www.notion.so/attendance-batch3",
+            notes: "https://www.notion.so/notes-batch3",
+            documents: "https://www.notion.so/documents-batch3"
+        }
+    };
+
+    // Handle form submission
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const errorMessage = document.getElementById('errorMessage');
+        
+        // Check if user exists and password matches
+        if (users[username] && users[username].password === password) {
+            // Store user data in session storage
+            sessionStorage.setItem('currentUser', username);
+            sessionStorage.setItem('userData', JSON.stringify(users[username]));
+            
+            // Redirect to dashboard
+            window.location.href = 'login-dashboard.html';
+        } else {
+            // Show error message
+            errorMessage.style.display = 'block';
+        }
+    });
+
+    // Theme detection (optional - matches index.html theme)
+    if (localStorage.getItem('lightMode') === 'true') {
+        document.body.classList.add('light-mode');
+    }
+    </script>
+</body>
+</html>
