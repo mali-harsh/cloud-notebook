@@ -156,30 +156,23 @@
     </div>
 
     <script>
-    // User database
-    const users = {
-        "batch1": {
-            password: "password1",
-            syllabus: "https://www.notion.so/syllabus-batch1",
-            attendance: "https://www.notion.so/attendance-batch1",
-            notes: "https://www.notion.so/notes-batch1",
-            documents: "https://www.notion.so/documents-batch1"
-        },
-        "batch2": {
-            password: "kyJbof-cupki7-runsoh", 
-            syllabus: "https://far-smell-825.notion.site/2340f2afffb280f59aaed4b5ee902f47?v=2390f2afffb280b88f6e000c93afc1a3",
-            attendance: "https://far-smell-825.notion.site/2440f2afffb2806d9246c909a278583a?v=2440f2afffb28165aa89000c4dd6c773&source=copy_link",
-            notes: "https://far-smell-825.notion.site/AWS-Notes-Batch-2-2550f2afffb2802c9764d42e0b24db3f?source=copy_link",
-            documents: "https://www.notion.so/documents-batch2"
-        },
-        "batch3": {
-            password: "password3",
-            syllabus: "https://www.notion.so/syllabus-batch3",
-            attendance: "https://www.notion.so/attendance-batch3",
-            notes: "https://www.notion.so/notes-batch3",
-            documents: "https://www.notion.so/documents-batch3"
+    // Obfuscated user data - encoded with simple Base64 encoding
+    const encodedUsers = "eyJiYXRjaDEiOnsicGFzc3dvcmQiOiJwYXNzd29yZDMiLCJzeWxsYWJ1cyI6Imh0dHBzOi8vd3d3Lm5vdGlvbi5zby9zeWxsYWJ1cy1iYXRjaDEiLCJhdHRlbmRhbmNlIjoiaHR0cHM6Ly93d3cubm90aW9uLnNvL2F0dGVuZGFuY2UtYmF0Y2gxIiwibm90ZXMiOiJodHRwczovL3d3dy5ub3Rpb24uc28vbm90ZXMtYmF0Y2gxIiwiZG9jdW1lbnRzIjoiaHR0cHM6Ly93d3cubm90aW9uLnNvL2RvY3VtZW50cy1iYXRjaDEifSwiYmF0Y2gyIjp7InBhc3N3b3JkIjoia3lKYm9mLWN1cGtpNy1ydW5zb2giLCJzeWxsYWJ1cyI6Imh0dHBzOi8vZmFyLXNtZWxsLTgyNS5ub3Rpb24uc2l0ZS8yMzQwZjJhZmZmYjI4MGY1OWFhZWQ0YjVlZTkwMmY0Nz92PTIzOTBmMmFmZmZiMjgwYjg4ZjZlMDAwYzkzYWZjMWEzIiwiYXR0ZW5kYW5jZSI6Imh0dHBzOi8vZmFyLXNtZWxsLTgyNS5ub3Rpb24uc2l0ZS8yNDQwZjJhZmZmYjI4MDZkOTI0NmM5MDlhMjc4NTgzYT92PTI0NDBmMmFmZmZiMjgxNjVhYTg5MDAwYzRkZDZjNzczJnNvdXJjZT1jb3B5X2xpbmsiLCJub3RlcyI6Imh0dHBzOi8vZmFyLXNtZWxsLTgyNS5ub3Rpb24uc2l0ZS9BV1MtTm90ZXMtQmF0Y2gtMi0yNTUwZjJhZmZmYjI4MDJjOTc2NGQ0MmUwYjI0ZGIzZj9zb3VyY2U9Y29weV9saW5rIiwiZG9jdW1lbnRzIjoiaHR0cHM6Ly93d3cubm90aW9uLnNvL2RvY3VtZW50cy1iYXRjaDIifSwiYmF0Y2gzIjp7InBhc3N3b3JkIjoicGFzc3dvcmQzIiwic3lsbGFidXMiOiJodHRwczovL3d3dy5ub3Rpb24uc28vc3lsbGFidXMtYmF0Y2gzIiwiYXR0ZW5kYW5jZSI6Imh0dHBzOi8vd3d3Lm5vdGlvbi5zby9hdHRlbmRhbmNlLWJhdGNoMyIsIm5vdGVzIjoiaHR0cHM6Ly93d3cubm90aW9uLnNvL25vdGVzLWJhdGNoMyIsImRvY3VtZW50cyI6Imh0dHBzOi8vd3d3Lm5vdGlvbi5zby9kb2N1bWVudHMtYmF0Y2gzIn19";
+
+    // Function to decode the user data
+    function decodeUserData(encoded) {
+        try {
+            // Simple Base64 decoding
+            const decoded = atob(encoded);
+            return JSON.parse(decoded);
+        } catch (e) {
+            console.error("Error decoding user data:", e);
+            return {};
         }
-    };
+    }
+
+    // Get the user data
+    const users = decodeUserData(encodedUsers);
 
     // Handle form submission
     document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -196,7 +189,7 @@
             sessionStorage.setItem('userData', JSON.stringify(users[username]));
             
             // Redirect to dashboard
-            window.location.href = 'login-dashboard.html';
+            window.location.href = 'dashboard.html';
         } else {
             // Show error message
             errorMessage.style.display = 'block';
